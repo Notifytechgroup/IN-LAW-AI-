@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Inlaw AI</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="btn-menu" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-balance-scale"></i>
+                <span>Inlaw AI</span>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="btn-icon" id="helpBtn" title="Help">
+                <i class="fas fa-question-circle"></i>
+            </button>
+            <button class="btn-icon" id="settingsBtn" title="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+
+            <div class="profile-menu">
+                <button class="btn-profile" id="profileBtn" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Lawyer</span>
+                    <i class="fas fa-chevron-down" aria-hidden="true" style="font-size: 12px; margin-left: 4px;"></i>
+                </button>
+
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown" id="profileDropdown" role="menu" aria-hidden="true">
+                    <div class="profile-dropdown-header">
+                        <div class="profile-dropdown-user">
+                            <div class="profile-dropdown-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="profile-dropdown-info">
+                                <div class="profile-dropdown-name" id="dropdownName">Lawyer Name</div>
+                                <div class="profile-dropdown-email" id="dropdownEmail">lawyer@example.com</div>
+                            </div>
+                        </div>
+                        <span class="profile-dropdown-plan" id="dropdownPlan">
+                            <i class="fas fa-crown"></i>
+                            Basic Plan
+                        </span>
+                    </div>
+
+                    <div class="profile-dropdown-menu">
+                        <button class="dropdown-item" onclick="openSettingsModal(); closeProfileDropdown();">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                            <span class="dropdown-item-shortcut">⌘,</span>
+                        </button>
+                        <button class="dropdown-item" onclick="openPricingModal(); closeProfileDropdown();">
+                            <i class="fas fa-star"></i>
+                            <span>Upgrade Plan</span>
+                        </button>
+                    </div>
+
+                    <div class="dropdown-divider" role="separator"></div>
+
+                    <div class="profile-dropdown-menu">
+                        <button class="dropdown-item">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Help & Support</span>
+                        </button>
+                        <button class="dropdown-item">
+                            <i class="fas fa-book"></i>
+                            <span>Documentation</span>
+                        </button>
+                    </div>
+
+                    <div class="dropdown-divider" role="separator"></div>
+
+                    <div class="profile-dropdown-menu">
+                        <button class="dropdown-item logout" onclick="logout(); closeProfileDropdown();">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <button class="btn-new-chat" id="newChatBtn">
+                <i class="fas fa-plus"></i>
+                New Consultation
+            </button>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <button class="nav-item active" data-view="chat">
+                        <i class="fas fa-comments"></i>
+                        <span>Chat</span>
+                    </button>
+                    <button class="nav-item" data-view="upload">
+                        <i class="fas fa-file-upload"></i>
+                        <span>Upload Document</span>
+                    </button>
+                    <button class="nav-item" data-view="templates">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Templates</span>
+                    </button>
+                    <button class="nav-item" data-view="search">
+                        <i class="fas fa-search"></i>
+                        <span>Search Cases</span>
+                    </button>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="section-title">Recent Consultations</h3>
+                    <div class="recent-chats" id="recentChats">
+                        <!-- Recent chats will be added here dynamically -->
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <!-- Chat View -->
+            <section class="view active" id="chatView">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="welcome-screen">
+                            <div class="welcome-icon"><i class="fas fa-balance-scale"></i></div>
+                            <h1 id="dynamicGreeting">Welcome to Legal AI Assistant</h1>
+                            <p id="greetingSubtext">Ask questions about Kenyan law, research case laws, or generate legal documents</p>
+                            <div class="suggestion-cards">
+                                <button class="suggestion-card" data-prompt="What are the requirements for a valid contract under Kenyan law?">
+                                    <i class="fas fa-file-contract"></i><span>Contract Requirements</span>
+                                </button>
+                                <button class="suggestion-card" data-prompt="Find recent cases on employment law in Kenya">
+                                    <i class="fas fa-briefcase"></i><span>Employment Law Cases</span>
+                                </button>
+                                <button class="suggestion-card" data-prompt="Generate a sale agreement template">
+                                    <i class="fas fa-file-signature"></i><span>Generate Document</span>
+                                </button>
+                                <button class="suggestion-card" data-prompt="What is the procedure for filing a plaint in Kenya?">
+                                    <i class="fas fa-gavel"></i><span>Court Procedures</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <div class="chat-input-wrapper">
+                            <textarea id="chatInput" placeholder="Ask about Kenyan law, case precedents, or request document generation..." rows="1"></textarea>
+                            <div class="input-actions">
+                                <button class="btn-input-action" id="attachBtn" title="Attach document"><i class="fas fa-paperclip"></i></button>
+                                <button class="btn-input-action" id="caseSearchBtn" title="Search cases"><i class="fas fa-search"></i></button>
+                                <button class="btn-send" id="sendBtn" disabled><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                        <p class="disclaimer">AI-generated content. Always verify with current Kenyan law before use.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Upload Document View -->
+            <section class="view" id="uploadView">
+                <div class="upload-container">
+                    <h2>Document Analysis</h2>
+                    <p class="subtitle">Upload legal documents for error detection, compliance checking, or contract review</p>
+                    <div class="upload-zone" id="uploadZone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3>Drag & Drop Document Here</h3>
+                        <p>or click to browse</p>
+                        <p class="upload-formats">Supported: PDF, DOCX, DOC (Max 10MB)</p>
+                        <input type="file" id="fileInput" accept=".pdf,.doc,.docx" hidden>
+                    </div>
+                    <div class="analysis-options">
+                        <h3>Analysis Type</h3>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="analysisType" value="error" checked>
+                                <span>Error Detection</span>
+                                <small>Identify grammatical and legal terminology errors</small>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="analysisType" value="compliance">
+                                <span>Compliance Check</span>
+                                <small>Verify compliance with Kenyan legal standards</small>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="analysisType" value="review">
+                                <span>Contract Review</span>
+                                <small>Comprehensive review of contract terms and clauses</small>
+                            </label>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="analyzeBtn" disabled><i class="fas fa-search"></i> Analyze Document</button>
+                    <div class="analysis-results" id="analysisResults" style="display:none;"></div>
+                </div>
+            </section>
+
+            <!-- Templates View -->
+            <section class="view" id="templatesView">
+                <div class="templates-container">
+                    <h2>Legal Document Templates</h2>
+                    <p class="subtitle">Generate customized legal documents based on Kenyan law</p>
+                    <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="templateSearch" placeholder="Search templates..."></div>
+
+                    <div class="popular-templates">
+                        <h3>Popular Templates</h3>
+                        <div class="template-grid">
+                            <div class="template-card" data-template="sale-agreement"><i class="fas fa-file-contract"></i><h4>Sale Agreement</h4><p>Contract for sale of goods or property</p></div>
+                            <div class="template-card" data-template="employment"><i class="fas fa-briefcase"></i><h4>Employment Contract</h4><p>Standard employment agreement</p></div>
+                            <div class="template-card" data-template="affidavit"><i class="fas fa-stamp"></i><h4>Affidavit</h4><p>Sworn statement for court proceedings</p></div>
+                            <div class="template-card" data-template="plaint"><i class="fas fa-gavel"></i><h4>Plaint</h4><p>Statement of claim in civil proceedings</p></div>
+                        </div>
+                    </div>
+
+                    <div class="all-templates">
+                        <h3>All Templates</h3>
+                        <div class="template-categories">
+                            <div class="category">
+                                <button class="category-header">
+                                    <i class="fas fa-chevron-down"></i>
+                                    <span>Contracts</span>
+                                </button>
+                                <div class="category-items">
+                                    <button class="template-item">Sale Agreement</button>
+                                    <button class="template-item">Lease Agreement</button>
+                                    <button class="template-item">Employment Contract</button>
+                                    <button class="template-item">Service Agreement</button>
+                                    <button class="template-item">Non-Disclosure Agreement</button>
+                                </div>
+                            </div>
+                            <div class="category">
+                                <button class="category-header">
+                                    <i class="fas fa-chevron-down"></i>
+                                    <span>Court Documents</span>
+                                </button>
+                                <div class="category-items">
+                                    <button class="template-item">Plaint</button>
+                                    <button class="template-item">Defence</button>
+                                    <button class="template-item">Affidavit</button>
+                                    <button class="template-item">Notice of Motion</button>
+                                    <button class="template-item">Witness Statement</button>
+                                </div>
+                            </div>
+                            <div class="category">
+                                <button class="category-header">
+                                    <i class="fas fa-chevron-down"></i>
+                                    <span>Corporate Documents</span>
+                                </button>
+                                <div class="category-items">
+                                    <button class="template-item">Memorandum of Association</button>
+                                    <button class="template-item">Articles of Association</button>
+                                    <button class="template-item">Board Resolution</button>
+                                    <button class="template-item">Shareholders Agreement</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Search Cases View -->
+            <section class="view" id="searchView">
+                <div class="search-container">
+                    <h2>Search Case Laws & Statutes</h2>
+                    <p class="subtitle">Search through Kenyan legal database</p>
+
+                    <div class="search-bar-large">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="caseSearchInput" placeholder="e.g., defamation cases in Kenya, Employment Act provisions..." />
+                        <button class="btn-search">Search</button>
+                    </div>
+
+                    <div class="search-filters">
+                        <div class="filter-group">
+                            <label>Document Type</label>
+                            <select id="docTypeFilter">
+                                <option value="all">All Types</option>
+                                <option value="case">Case Law</option>
+                                <option value="statute">Statute</option>
+                                <option value="regulation">Regulation</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Court Level</label>
+                            <select id="courtFilter">
+                                <option value="all">All Courts</option>
+                                <option value="supreme">Supreme Court</option>
+                                <option value="appeal">Court of Appeal</option>
+                                <option value="high">High Court</option>
+                                <option value="magistrate">Magistrate Court</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Date Range</label>
+                            <select id="dateFilter">
+                                <option value="all">All Time</option>
+                                <option value="year">Past Year</option>
+                                <option value="5years">Past 5 Years</option>
+                                <option value="10years">Past 10 Years</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search-results" id="searchResults">
+                        <div class="search-placeholder">
+                            <i class="fas fa-search"></i>
+                            <p>Enter a search query to find relevant case laws and statutes</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Template Modal -->
+    <div class="modal" id="templateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Generate Document</h3>
+                <button class="btn-close" id="closeModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Form will be populated based on template -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="btn-close" id="closeSettings"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h4>Account Settings</h4>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="settingsName" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="settingsEmail" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label>Law Firm/Organization</label>
+                        <input type="text" id="settingsFirm" placeholder="Enter your organization">
+                    </div>
+                    <div class="form-group">
+                        <label>Practice Area</label>
+                        <select id="settingsPractice">
+                            <option value="">Select practice area</option>
+                            <option value="corporate">Corporate Law</option>
+                            <option value="criminal">Criminal Law</option>
+                            <option value="family">Family Law</option>
+                            <option value="property">Property Law</option>
+                            <option value="employment">Employment Law</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h4>Appearance</h4>
+                    <div class="form-group">
+                        <label>Theme</label>
+                        <div>
+                            <button id="themeToggleBtn" class="btn-secondary" type="button">Switch to Dark Mode</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h4>Preferences</h4>
+                    <label><input type="checkbox" id="settingsNotifications" checked> Email Notifications</label><br>
+                    <label><input type="checkbox" id="settingsCitations" checked> Show Citations in Responses</label><br>
+                    <label><input type="checkbox" id="settingsAutoSave" checked> Auto-save Conversations</label>
+                </div>
+
+                <div class="settings-section">
+                    <h4>Language & Region</h4>
+                    <div class="form-group">
+                        <label>Language</label>
+                        <select id="settingsLanguage">
+                            <option value="en">English</option>
+                            <option value="sw">Swahili</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date Format</label>
+                        <select id="settingsDateFormat">
+                            <option value="dd/mm/yyyy">DD/MM/YYYY</option>
+                            <option value="mm/dd/yyyy">MM/DD/YYYY</option>
+                            <option value="yyyy-mm-dd">YYYY-MM-DD</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign In Page (initial visibility controlled by script) -->
+    <div class="signin-page" id="signinPage">
+        <div class="signin-container">
+            <div class="signin-left">
+                <div class="signin-branding">
+                    <div class="signin-logo"><i class="fas fa-balance-scale"></i></div>
+                    <h1>Legal AI Assistant</h1>
+                    <p>Your intelligent legal research companion for Kenyan law</p>
+                </div>
+            </div>
+
+            <div class="signin-right">
+                <div class="signin-box">
+                    <h2>Welcome Back</h2>
+                    <p class="signin-subtitle">Sign in to continue to Legal AI Assistant</p>
+
+                    <form id="signinForm" onsubmit="handleSignIn(event)">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="signinEmail" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="signinPassword" required placeholder="Enter your password">
+                        </div>
+                        <div class="form-options">
+                            <label class="checkbox-label"><input type="checkbox" id="rememberMe"> Remember me</label>
+                            <a href="#" class="forgot-password">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="btn-signin">Sign In</button>
+                    </form>
+
+                    <div class="signin-divider"><span>OR</span></div>
+
+                    <button class="btn-google" type="button" onclick="signInWithGoogle()">
+                        <i class="fab fa-google"></i> Continue with Google
+                    </button>
+
+                    <p class="signin-footer">Don't have an account? <a href="#" onclick="showSignUpForm()">Sign up</a></p>
+
+                    <button class="btn-view-plans" onclick="openPricingModal()"><i class="fas fa-star"></i> View Pricing Plans</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Separate Sign Up Page (distinct from sign-in, initially hidden) -->
+    <div class="signin-page hidden" id="signupPage" aria-hidden="true">
+        <div class="signin-container">
+            <div class="signin-left">
+                <div class="signin-branding">
+                    <div class="signin-logo"><i class="fas fa-file-contract"></i></div>
+                    <h1>Create your account</h1>
+                    <p>Register to start using Legal AI Assistant — tailored for Kenyan law.</p>
+                </div>
+            </div>
+
+            <div class="signin-right">
+                <div class="signin-box">
+                    <h2>Create Account</h2>
+                    <p class="signin-subtitle">Fill in details to create your account</p>
+
+                    <form id="signupForm">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="signupName" required placeholder="Your full name">
+                        </div>
+                        <div class="form-group">
+                            <label>Law Firm / Organization (optional)</label>
+                            <input type="text" id="signupFirm" placeholder="Firm or organisation">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="signupEmail" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="signupPassword" required placeholder="Create a password">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" id="signupPasswordConfirm" required placeholder="Confirm password">
+                        </div>
+                        <label class="checkbox-label"><input type="checkbox" id="signupAgree" required> I agree to the Terms & Privacy</label>
+
+                        <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+                            <button type="submit" class="btn-primary">Create Account</button>
+                            <button type="button" class="btn-secondary" onclick="openPricingModal()">View Plans</button>
+                            <button type="button" class="btn-link" onclick="closeSignUpForm()">Back to Sign In</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer" aria-hidden="false">
+        <div class="powered-by" aria-label="Powered by Notify">
+            Powered by <a href="https://notify.example" target="_blank" rel="noopener noreferrer">Notify</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
